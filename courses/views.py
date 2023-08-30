@@ -8,6 +8,7 @@ from .models import Course, Module, Content
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic.base import TemplateResponseMixin, View
 from .forms import ModuleFormSet
+from braces.views import CsrfExemptMixin, JsonRequestResponseMixin
 
 
 class OwnerMixin:
@@ -136,3 +137,12 @@ class ModuleContentListView(TemplateResponseMixin, View):
                                    id=module_id,
                                    course__owner=request.user)
         return self.render_to_response({'module': module})
+
+
+class ModuleOrderView(CsrfExemptMixin, JsonRequestResponseMixin, View):
+    def post(self, request):
+        for id, order in self.request_json.items():
+            Module.objects.filter(
+                id=id, course__owner=request.user
+            ).update(order=order)
+        return self.render_json_response({'saved': 'OK'})
