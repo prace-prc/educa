@@ -22,7 +22,7 @@ class Course(models.Model):
                               related_name='courses_created',
                               on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject,
-                                related_name='courses',
+                                related_name='course',
                                 on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
