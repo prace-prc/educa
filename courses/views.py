@@ -34,29 +34,29 @@ class OwnerCourseMixin(OwnerMixin, LoginRequiredMixin, PermissionRequiredMixin):
 
 
 class OwnerCourseEditMixin(OwnerCourseMixin, OwnerEditMixin):
-    template_name = 'course/manage/course/form.html'
+    template_name = 'courses/manage/courses/form.html'
 
 
 class ManageCourseListView(OwnerCourseMixin, ListView):
-    template_name = 'course/manage/course/list.html'
-    permission_required = 'course.view_course'
+    template_name = 'courses/manage/course/list.html'
+    permission_required = 'courses.view_course'
 
 
 class CourseCreateView(OwnerCourseEditMixin, CreateView):
-    permission_required = 'course.add_course'
+    permission_required = 'courses.add_course'
 
 
 class CourseUpdateView(OwnerCourseEditMixin, UpdateView):
-    permission_required = 'course.change_course'
+    permission_required = 'courses.change_course'
 
 
 class CourseDeleteView(OwnerCourseMixin, DeleteView):
-    template_name = 'course/manage/course/delete.html'
-    permission_required = 'course.delete_course'
+    template_name = 'courses/manage/course/delete.html'
+    permission_required = 'courses.delete_course'
 
 
 class CourseModuleUpdateView(TemplateResponseMixin, View):
-    template_name = 'course/manage/module/formset.html'
+    template_name = 'courses/manage/module/formset.html'
     course = None
 
     def get_formset(self, data=None):
@@ -69,7 +69,7 @@ class CourseModuleUpdateView(TemplateResponseMixin, View):
     def get(self, request, *args, **kwargs):
         formset = self.get_formset()
         return self.render_to_response({
-            'course': self.course,
+            'courses': self.course,
             'formset': formset
         })
 
@@ -79,7 +79,7 @@ class CourseModuleUpdateView(TemplateResponseMixin, View):
             formset.save()
             return redirect('manage_course_list')
         return self.render_to_response({
-            'course': self.course,
+            'courses': self.course,
             'formset': formset
         })
 
@@ -88,11 +88,11 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
     module = None
     model = None
     obj = None
-    template_name = 'course/manage/content/form.html'
+    template_name = 'courses/manage/content/form.html'
 
     def get_model(self, model_name):
         if model_name in ['text', 'video', 'image', 'file']:
-            return apps.get_model(app_label='course', model_name=model_name)
+            return apps.get_model(app_label='courses', model_name=model_name)
         return None
 
     def get_form(self, model, *args, **kwargs):
@@ -134,7 +134,7 @@ class ContentDeleteView(View):
 
 
 class ModuleContentListView(TemplateResponseMixin, View):
-    template_name = 'course/manage/module/content_list.html'
+    template_name = 'courses/manage/module/content_list.html'
 
     def get(self, request, module_id):
         module = get_object_or_404(Module,
@@ -163,15 +163,15 @@ class ContentOrderView(CsrfExemptMixin, JsonRequestResponseMixin, View):
 
 class CourseListView(TemplateResponseMixin, View):
     model = Course
-    template_name = 'course/course/list.html'
+    template_name = 'courses/courses/list.html'
 
     def get(self, request, subject=None):
-        # subjects = Subject.objects.annotate(total_courses=Count('course'))
+        # subjects = Subject.objects.annotate(total_courses=Count('courses'))
 
         subjects = cache.get('all_subjects')
         if not subjects:
             subjects = Subject.objects.annotate(
-                total_courses=Count('course'))
+                total_courses=Count('courses'))
             cache.set('all_subjects', subjects)
         all_courses = Course.objects.annotate(
             total_modules=Count('modules'))
@@ -190,12 +190,12 @@ class CourseListView(TemplateResponseMixin, View):
                 cache.set('all_courses', courses)
         return self.render_to_response({'subjects': subjects,
                                         'subject': subject,
-                                        'course': courses})
+                                        'courses': courses})
 
 
 class CourseDetailView(DetailView):
     model = Course
-    template_name = 'course/course/detail.html'
+    template_name = 'courses/courses/detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
