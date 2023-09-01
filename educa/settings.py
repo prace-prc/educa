@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'redisboard',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -136,7 +137,7 @@ LOGIN_REDIRECT_URL = reverse_lazy('student_course_list')
 
 CACHES = {
     'default': {
-        'BACKEND':  'django.core.cache.backends.redis.RedisCache',
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
         'LOCATION': 'redis:127.0.0.1:6379',
     }
 }
