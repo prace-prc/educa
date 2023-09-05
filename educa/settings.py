@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'redisboard',
     'rest_framework',
+    'chat',
 ]
 
 MIDDLEWARE = [
