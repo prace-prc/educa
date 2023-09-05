@@ -10,3 +10,4 @@ redis==4.3.4
 django-redisboard==8.3.0
 attrs
 djangorestframework==3.14
+channels==4.0.0
