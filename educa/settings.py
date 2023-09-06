@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'courses.apps.CoursesConfig',
     'students.apps.StudentsConfig',
     'embed_video',
@@ -78,7 +79,7 @@ TEMPLATES = [
         },
     },
 ]
-ASGI_APPLICATION = 'educa.routing.application'
+ASGI_APPLICATION = 'educa.asgi.application'
 WSGI_APPLICATION = 'educa.wsgi.application'
 
 
